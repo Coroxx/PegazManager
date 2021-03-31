@@ -87,7 +87,26 @@ def hub():
 
 
 def newconfig():
-    pass
+    ip = input(colorText('[[' + defaultcolor + ']]' + '\nServer IP : '))
+    if bool(re.match(r'^([0–9]{1,3}.){3}.([0–9]{1,3})$', ip)):
+        pass
+    else:
+        print(colorText('[[red]][!] Incorrect syntax !\n'))
+        newconfig()
+    port = input(colorText('[[' + defaultcolor + ']]' +
+                 '\nPort (Enter for default 22) : '))
+    if port == '':
+        pass
+    elif (isinstance(port, int)):
+        pass
+    else:
+        print(colorText('[[red]][!] Incorrect syntax !\n'))
+        newconfig()
+    print(colorText('[[' + defaultcolor + ']]' + '--Credentials--\n'))
+    username = input(
+        colorText('[[' + defaultcolor + ']]' + 'Username (Press enter for root) : '))
+    if username == '':
+        username = 'root'
 
 
 if __name__ == "__main__":
