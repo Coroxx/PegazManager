@@ -89,6 +89,13 @@ def hub():
               str(len(info)) + ' configurations detected !'))
 
 
+def isvalidpath(path):
+    if os.path.exists:
+        return True
+    else:
+        return False
+
+
 def newconfig():
     ip = input(colorText('[[' + defaultcolor + ']]' + '\nServer IP : '))
     if bool(re.match(r'^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$', ip)):
@@ -105,16 +112,40 @@ def newconfig():
     else:
         print(colorText('[[red]][!] Incorrect syntax !\n'))
         newconfig()
-    print(colorText('[[' + defaultcolor + ']]' + '\n--Credentials--\n'))
-    username = input(
-        colorText('[[' + defaultcolor + ']]' + 'Username (Press enter for root) : '))
-    if username == '':
-        username = 'root'
-    password = input(
-        colorText('[[' + defaultcolor + ']]' + 'Password : '))
-    time.sleep(1)
-    print(colorText('[[' + 'green' + ']]' +
-          '[+] Testing your credentials...'))
+    keyquestion = input(colorText('[[' + defaultcolor + ']]' +
+                                  '\nFirst of all, do you have a ssh key ? Y/N : '))
+    if bool(re.match(r"OUI|oui|y(?:es)?|Y", keyquestion)):
+        key = True
+    else:
+        key = False
+
+    if key:
+        path = input(colorText('[[' + defaultcolor + ']]' + '\nPath : '))
+
+        if isvalidpath(path):
+            print(colorText('[[green]]\n[+] File detected !\n'))
+        else:
+            incorrect = True
+            while incorrect:
+                print(
+                    colorText('[[red]][-] Invalid path / Invalid location, try again'))
+                path = input(
+                    colorText('[[' + defaultcolor + ']]' + '\nPath : '))
+                if isvalidpath(path):
+                    break
+                else:
+                    continue
+    if not key:
+        print(colorText('[[' + defaultcolor + ']]' + '\n--Credentials--\n'))
+        username = input(
+            colorText('[[' + defaultcolor + ']]' + 'Username (Press enter for root) : '))
+        if username == '':
+            username = 'root'
+        password = input(
+            colorText('[[' + defaultcolor + ']]' + 'Password : '))
+        time.sleep(1)
+        print(colorText('[[' + 'green' + ']]' +
+                        '[+] Testing your credentials...'))
     try:
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -124,6 +155,11 @@ def newconfig():
     except:
         print(colorText('[[' + 'red' + ']]' +
               '\n[-] Incorrect credentials, try again...'))
+        verbose = input(colorText(
+            '[[' + defaultcolor + ']]\nDo you want to make a verbose try ? Y/N : '))
+        if bool(re.match(r"OUI|oui|y(?:es)?|Y", verbose)):
+            os.system('ssh ')
+
         newconfig()
     with open('config.json', 'w') as f:
         data = {
