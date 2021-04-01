@@ -90,7 +90,7 @@ def hub():
 
 
 def isvalidpath(path):
-    if os.path.exists:
+    if os.path.exists(path):
         return True
     else:
         return False
@@ -106,14 +106,16 @@ def newconfig():
     port = input(colorText('[[' + defaultcolor + ']]' +
                  '\nPort (Enter for default 22) : '))
     if port == '':
-        pass
-    elif (isinstance(port, int)):
-        pass
+        port = '22'
     else:
-        print(colorText('[[red]][!] Incorrect syntax !\n'))
-        newconfig()
+        try:
+            int(port)
+        except ValueError:
+            print(colorText('[[red]][!] Incorrect syntax !\n'))
+            newconfig()
+        pass
     keyquestion = input(colorText('[[' + defaultcolor + ']]' +
-                                  '\nFirst of all, do you have a ssh key ? Y/N : '))
+                                  '\n----------------------------\nFirst of all, do you have a ssh key ? Y/N : '))
     if bool(re.match(r"OUI|oui|y(?:es)?|Y", keyquestion)):
         key = True
     else:
@@ -123,7 +125,7 @@ def newconfig():
         path = input(colorText('[[' + defaultcolor + ']]' + '\nPath : '))
 
         if isvalidpath(path):
-            print(colorText('[[green]]\n[+] File detected !\n'))
+            print(colorText('[[green]][+] File detected !\n'))
         else:
             incorrect = True
             while incorrect:
@@ -135,39 +137,57 @@ def newconfig():
                     break
                 else:
                     continue
+    print(colorText('[[' + defaultcolor + ']]' + '\n--Credentials--\n'))
+    username = input(
+        colorText('[[' + defaultcolor + ']]' + 'Username (Press enter for root) : '))
+    if username == '':
+        username = 'root'
     if not key:
-        print(colorText('[[' + defaultcolor + ']]' + '\n--Credentials--\n'))
-        username = input(
-            colorText('[[' + defaultcolor + ']]' + 'Username (Press enter for root) : '))
-        if username == '':
-            username = 'root'
         password = input(
             colorText('[[' + defaultcolor + ']]' + 'Password : '))
         time.sleep(1)
-        print(colorText('[[' + 'green' + ']]' +
-                        '[+] Testing your credentials...'))
+    print(colorText('[[' + 'green' + ']]' +
+                    '[+] Testing your credentials...'))
     try:
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        ssh.connect(ip, port=port, username=username, password=password)
+        if key:
+            ssh.connect(ip, port=port, username=username,
+                        key_filename=path)
+            password = False
+        else:
+            ssh.connect(ip, port=port, username=username, password=password)
         time.sleep(1)
-        print(colorText('[[green]][+] Succes !'))
+        print(colorText('[[green]]\n[+] Succes !'))
     except:
         print(colorText('[[' + 'red' + ']]' +
               '\n[-] Incorrect credentials, try again...'))
-        verbose = input(colorText(
-            '[[' + defaultcolor + ']]\nDo you want to make a verbose try ? Y/N : '))
-        if bool(re.match(r"OUI|oui|y(?:es)?|Y", verbose)):
-            os.system('ssh ')
-
+        if key:
+            verbose = input(colorText(
+                '[[' + defaultcolor + ']]\nDo you want to make a verbose try ? Y/N : '))
+            if bool(re.match(r"OUI|oui|y(?:es)?|Y", verbose)):
+                os.system('ssh -vvv -i' + path + ' ' + username + '@' + ip)
+        time.sleep(1)
         newconfig()
     with open('config.json', 'w') as f:
-        data = {
-            "ip": ip,
-            "port": port,
-            "username": username,
-            "password": password
-        },
+        if key:
+            data = """ {
+                "type": "key",
+                "ip": ip,
+                "port": port,
+                "username": username,
+                "path": path,
+            }, """
+            data = json.loads(data)
+        else:
+            data = """
+                {"type": "password",
+                 "ip": ip,
+                 "port": port,
+                 "username": username,
+                 "password": password
+                }, """
+            data = json.loads(data)
         json.dump(data, f)
     sys.exit()
 
