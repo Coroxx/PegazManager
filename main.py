@@ -4,6 +4,9 @@ import time
 import json
 import random
 import re
+import socketserver
+import socket
+import paramiko
 
 
 COLORS = {
@@ -88,7 +91,7 @@ def hub():
 
 def newconfig():
     ip = input(colorText('[[' + defaultcolor + ']]' + '\nServer IP : '))
-    if bool(re.match(r'^([0–9]{1,3}.){3}.([0–9]{1,3})$', ip)):
+    if bool(re.match(r'^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$', ip)):
         pass
     else:
         print(colorText('[[red]][!] Incorrect syntax !\n'))
@@ -102,11 +105,35 @@ def newconfig():
     else:
         print(colorText('[[red]][!] Incorrect syntax !\n'))
         newconfig()
-    print(colorText('[[' + defaultcolor + ']]' + '--Credentials--\n'))
+    print(colorText('[[' + defaultcolor + ']]' + '\n--Credentials--\n'))
     username = input(
         colorText('[[' + defaultcolor + ']]' + 'Username (Press enter for root) : '))
     if username == '':
         username = 'root'
+    password = input(
+        colorText('[[' + defaultcolor + ']]' + 'Password : '))
+    time.sleep(1)
+    print(colorText('[[' + 'green' + ']]' +
+          '[+] Testing your credentials...'))
+    try:
+        ssh = paramiko.SSHClient()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        ssh.connect(ip, port=port, username=username, password=password)
+        time.sleep(1)
+        print(colorText('[[green]][+] Succes !'))
+    except:
+        print(colorText('[[' + 'red' + ']]' +
+              '\n[-] Incorrect credentials, try again...'))
+        newconfig()
+    with open('config.json', 'w') as f:
+        data = {
+            "ip": ip,
+            "port": port,
+            "username": username,
+            "password": password
+        },
+        json.dump(data, f)
+    sys.exit()
 
 
 if __name__ == "__main__":
