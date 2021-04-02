@@ -150,12 +150,12 @@ def configmodify(data):
             colorText('[[' + defaultcolor + ']][' + str(i+1) + '] Fast connect to ' + data[f'{l}']['ip']))
     choice = input(colorText('[[' + defaultcolor + ']]\n\n[?] Choice ? : '))
     try:
-        choice = int(choice)
+        configchoice = int(choice)
     except ValueError:
         print(colorText('[[red]]\n[!] Incorrect choice !'))
         time.sleep(1)
         configmodify(data)
-    if choice > len(info):
+    if configchoice > len(info):
         print(colorText('[[red]]\n[!] Incorrect choice !'))
         time.sleep(1)
         configmodify(data)
@@ -176,10 +176,13 @@ def configmodify(data):
         configmodify(data)
     elif choice == 0:
         configmenu(data)
-
-    # with open('config.json', 'r') as f :
-    #     data = json.load(f)
-    #     data[f'{choice}'][]
+    elif choice == 1:
+        newip = input(colorText('\nNew IP Adress : '))
+        with open('config.json', 'w') as f:
+            data = json.load(f)
+            data[f'{configchoice}']['ip'] = newip
+            json.dump(data, f)
+    menu(len(info), data)
 
 
 def menu(number, data):
