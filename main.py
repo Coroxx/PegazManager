@@ -88,11 +88,15 @@ def hub():
     else:
         print(colorText('[[' + defaultcolor + ']][+] ' +
               str(len(info)) + ' configurations detected !'))
-    menu(len(info))
+    menu(len(info), info)
 
 
-def menu(number):
-    pass
+def menu(number, data):
+    print('\n')
+    for i in range(number):
+        l = i + 1
+        print(
+            colorText('[[' + defaultcolor + ']][' + str(i+1) + '] ' + data[f'{l}']['ip']))
 
 
 def isvalidpath(path):
@@ -110,7 +114,7 @@ def newconfig():
         print(colorText('[[red]][!] Incorrect syntax !\n'))
         newconfig()
     port = input(colorText('[[' + defaultcolor + ']]' +
-                 '\nPort (Enter for default 22) : '))
+                           '\nPort (Enter for default 22) : '))
     if port == '':
         port = '22'
     else:
@@ -162,7 +166,8 @@ def newconfig():
                         key_filename=path)
             password = False
         else:
-            ssh.connect(ip, port=port, username=username, password=password)
+            ssh.connect(ip, port=port, username=username,
+                        password=password)
         time.sleep(1)
         print(colorText('[[green]]\n[+] Succes !'))
     except:
