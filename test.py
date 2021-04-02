@@ -1,11 +1,17 @@
 import json
 
 
-with open("config.json", 'a') as f:
-    data = """ 
-        {"type": "pd"
-        } """
-    data = json.loads(data)
-    json.dump(data, f, indent=2)
-    f.write(',')
-    f.close()
+with open("config.json", 'r') as f:
+    data = json.loads(f.read())  # data becomes a dictionary
+
+
+for i in range(4):
+    # do things with data here
+    data[i] = {
+        "ip": "12.3.4.2",
+        "username": "root"
+    }
+
+# and then just write the data back on the file
+with open("config.json", 'w') as f:
+    f.write(json.dumps(data, sort_keys=True, indent=4, separators=(',', ': ')))

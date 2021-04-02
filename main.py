@@ -9,6 +9,10 @@ import socket
 import paramiko
 
 
+# Pegaz, an intelligent SSH Session Manager
+# Entirely coded by @coroxx on github
+
+
 COLORS = {
     "black": "\u001b[30;1m",
     "red": "\u001b[31;1m",
@@ -55,12 +59,12 @@ def exit():
 
 
 def hub():
+    global info
     os.system('clear')
     print(colorText('[[' + defaultcolor + ']]________                          \n___  __ \___________ ______ ______\n__  /_/ /  _ \_  __ `/  __ `/__  /\n_  ____//  __/  /_/ // /_/ /__  /_\n/_/     \___/_\__, / \__,_/ _____/\n             /____/               \n\nAuthor : @Coroxx on GitHub\nVersion : 1.0\n'))
     try:
         with open('config.json', 'r') as info:
             info = json.load(info)
-            info = info['data']
     except:
         time.sleep(1)
         regenerate = input(colorText(
@@ -69,9 +73,6 @@ def hub():
             os.system('touch config.json')
             with open('config.json', 'w') as generate:
                 t = {
-                    "data": [
-
-                    ]
                 }
                 json.dump(t, generate)
             hub()
@@ -87,6 +88,11 @@ def hub():
     else:
         print(colorText('[[' + defaultcolor + ']][+] ' +
               str(len(info)) + ' configurations detected !'))
+    menu(len(info))
+
+
+def menu(number):
+    pass
 
 
 def isvalidpath(path):
@@ -169,26 +175,27 @@ def newconfig():
                 os.system('ssh -vvv -i' + path + ' ' + username + '@' + ip)
         time.sleep(1)
         newconfig()
-    with open('config.json', 'w') as f:
+    with open('config.json', 'r') as f:
+        data = json.loads(f.read())
         if key:
-            data = """ {
+            data[len(info)+1] = {
                 "type": "key",
                 "ip": ip,
                 "port": port,
                 "username": username,
                 "path": path,
-            }, """
-            data = json.loads(data)
+            }
         else:
-            data = """
-                {"type": "password",
-                 "ip": ip,
-                 "port": port,
-                 "username": username,
-                 "password": password
-                }, """
-            data = json.loads(data)
-        json.dump(data, f)
+            data[len(info)+1] = {
+                "type": "password",
+                "ip": ip,
+                "port": port,
+                "username": username,
+                "password": password
+            }
+        with open("config.json", 'w') as f:
+            f.write(json.dumps(data,
+                    indent=4, separators=(',', ': ')))
     sys.exit()
 
 
