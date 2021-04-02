@@ -69,11 +69,11 @@ except:
 def pingcolor(text):
     ping = int(text)
     if ping <= 100:
-        return colorText('[[green]] {} ms').format(text)
+        return colorText('[[green]]{} ms').format(text)
     elif ping >= 100 and ping <= 250:
-        return colorText('[[yellow]] {} ms').format(text)
+        return colorText('[[yellow]]{} ms').format(text)
     else:
-        return colorText('[[red]] {} ms').format(text)
+        return colorText('[[red]]{} ms').format(text)
 
 
 def exit():
@@ -116,12 +116,45 @@ def hub():
     menu(len(info), info)
 
 
+def config():
+    pass
+
+
 def menu(number, data):
     print('\n')
     for i in range(number):
         l = i + 1
-        print(
-            colorText('[[' + defaultcolor + ']][' + str(i+1) + '] Fast connect to ' + data[f'{l}']['ip']))
+        try:
+            response_list = ping(data[f'{l}']['ip'], size=40, count=5)
+            Online = 'Online'
+        except:
+            Online = 'Offline'
+        if Online == "Online":
+            print(
+                colorText('[[' + defaultcolor + ']][' + str(i+1) + '] Fast connect to ' + data[f'{l}']['ip'] + ' [[green]](Online : ' + pingcolor(round(response_list.rtt_avg_ms)) + '[[green]])[[' + defaultcolor + ']]'))
+        else:
+            print(
+                colorText('[[' + defaultcolor + ']][' + str(i+1) + '] Fast connect to ' + data[f'{l}']['ip'] + ' [[red]](Offline)' + '[[' + defaultcolor + ']]'))
+
+    print(colorText('[[' + defaultcolor + ']]\n[99] Edit configurations'))
+    choice = input(colorText('[[' + defaultcolor + ']]' + '\n[?] Choice : '))
+    try:
+        choice = int(choice)
+    except ValueError:
+        print(colorText('[[red]]\n[!] Invalid choice !'))
+        menu(len(info), info)
+    if choice == 99:
+        config()
+    elif choice > number:
+        print(colorText('[[red]]\n[!] Invalid choice !'))
+        menu(len(info), info)
+    elif choice < number:
+        os.system('clear')
+        print(colorText('[[green][+] Currently connecting to your server...'))
+        time.sleep(2)
+        os.system('clear')
+        os.system(
+            'ssh -i ' + data[f'{choice}']['path'] + ' ' + data[f'{choice}']['username'] + "@" + data[f'{choice}']['ip'])
 
 
 def isvalidpath(path):
