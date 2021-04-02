@@ -1,2 +1,3 @@
 pythonping
+paramiko
 replit

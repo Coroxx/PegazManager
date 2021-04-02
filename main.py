@@ -116,17 +116,17 @@ def hub():
     menu(len(info), info)
 
 
-def configmenu():
+def configmenu(data):
     replit.clear()
     print(colorText('[[' + defaultcolor + ']]________                          \n___  __ \___________ ______ ______\n__  /_/ /  _ \_  __ `/  __ `/__  /\n_  ____//  __/  /_/ // /_/ /__  /_\n/_/     \___/_\__, / \__,_/ _____/\n             /____/               \n\nAuthor : @Coroxx on GitHub\nVersion : 1.0\n'))
     choice = input(colorText(
-        '[[' + defaultcolor + ']]\n[1] Add a new configuration[2] Modify a configuration[3] Delete a configuration\n[0] Back :'))
+        '[[' + defaultcolor + ']]\n[1] Add a new configuration\n[2] Modify a configuration\n[3] Delete a configuration\n\n[0] Back\n\n[?] Choice : '))
     if choice == '0':
         menu(len(info), info)
     elif choice == '1':
         newconfig()
     elif choice == '2':
-        configmodify()
+        configmodify(data)
     elif choice == '3':
         configdelete
 
@@ -135,8 +135,46 @@ def configdelete():
     pass
 
 
-def configmodify():
-    pass
+def configmodify(data):
+    replit.clear()
+    print(
+        colorText('[[' + defaultcolor + ']]Which configuration ?\n'))
+    for i in range(len(info)):
+        l = i + 1
+        print(
+            colorText('[[' + defaultcolor + ']][' + str(i+1) + '] Fast connect to ' + data[f'{l}']['ip']))
+    choice = input(colorText('[[' + defaultcolor + ']]\n\n[?] Choice ? : '))
+    try:
+        choice = int(choice)
+    except ValueError:
+        print(colorText('[[red]]\n[!] Incorrect choice !'))
+        time.sleep(1)
+        configmodify(data)
+    if choice > len(info):
+        print(colorText('[[red]]\n[!] Incorrect choice !'))
+        time.sleep(1)
+        configmodify(data)
+    else:
+        replit.clear()
+
+    choice = input(colorText(
+        '\n[[' + defaultcolor + ']][1] Modify IP\n[2] Change username \n[3] Change key path (if exists) \n[4] Change password (if defined) \n[5] Change port\n\n[0] Back\n\n[?] Choice : '))
+    try:
+        choice = int(choice)
+    except ValueError:
+        print(colorText('[[red]]\n[!] Incorrect choice !'))
+        time.sleep(1)
+        configmodify(data)
+    if choice > 6:
+        print(colorText('[[red]]\n[!] Incorrect choice !'))
+        time.sleep(1)
+        configmodify(data)
+    elif choice == 0:
+        configmenu(data)
+
+    # with open('config.json', 'r') as f :
+    #     data = json.load(f)
+    #     data[f'{choice}'][]
 
 
 def menu(number, data):
@@ -155,20 +193,23 @@ def menu(number, data):
             print(
                 colorText('[[' + defaultcolor + ']][' + str(i+1) + '] Fast connect to ' + data[f'{l}']['ip'] + ' [[red]](Offline)' + '[[' + defaultcolor + ']]'))
 
-    print(colorText('\n\n\n[99] Edit configurations'))
+    print(colorText('[[blue]]\n\n\n[99] Edit configurations'))
     choice = input(colorText('[[' + defaultcolor + ']]' + '\n[?] Choice : '))
     try:
         choice = int(choice)
     except ValueError:
         print(colorText('[[red]]\n[!] Invalid choice !'))
+        time.sleep(1)
         replit.clear()
-        menu(len(info), info)
+        hub()
     print(number)
     if choice == 99:
-        configmenu()
+        configmenu(data)
     elif choice > number:
         print(colorText('[[red]]\n[!] Invalid choice !'))
-        menu(len(info), info)
+        time.sleep(1)
+        replit.clear()
+        hub()
     elif choice <= number:
         replit.clear()
         print(colorText('[[green]][+] Currently connecting to your server...'))
