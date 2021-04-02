@@ -147,8 +147,8 @@ def configmodify(data):
     for i in range(len(info)):
         l = i + 1
         print(
-            colorText('[[' + defaultcolor + ']][' + str(i+1) + '] Fast connect to ' + data[f'{l}']['ip']))
-    choice = input(colorText('[[' + defaultcolor + ']]\n\n[?] Choice ? : '))
+            colorText('[[' + defaultcolor + ']][' + str(i+1) + '] Configuration : ' + data[f'{l}']['username'] + '@' + data[f'{l}']['ip']))
+    choice = input(colorText('[[' + defaultcolor + ']]\n\n[?] Choice : '))
     try:
         configchoice = int(choice)
     except ValueError:
@@ -166,6 +166,9 @@ def configmodify(data):
         '\n[[' + defaultcolor + ']][1] Modify IP\n[2] Change username \n[3] Change key path (if exists) \n[4] Change password (if defined) \n[5] Change port\n\n[0] Back\n\n[?] Choice : '))
     try:
         choice = int(choice)
+        with open('config.json', 'r') as f:
+            data = json.load(f)
+            f.close()
     except ValueError:
         print(colorText('[[red]]\n[!] Incorrect choice !'))
         time.sleep(1)
@@ -178,11 +181,32 @@ def configmodify(data):
         configmenu(data)
     elif choice == 1:
         newip = input(colorText('\nNew IP Adress : '))
+        if bool(re.match(r'^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$', newip)):
+            pass
+        else:
+            print(colorText('[[red]][!] Incorrect syntax !\n'))
+            time.sleep(1)
+            replit.clear()
+            configmodify(data)
         with open('config.json', 'w') as f:
-            data = json.load(f)
             data[f'{configchoice}']['ip'] = newip
-            json.dump(data, f)
-    menu(len(info), data)
+            json.dump(data, f, indent=4)
+    elif choice == 2:
+        newusername = input(colorText('\nNew username : '))
+        with open('config.json', 'w') as f:
+            data[f'{configchoice}']['username'] = newusername
+            json.dump(data, f, indent=4)
+    elif choice == 3:
+        try:
+            data[f'{configchoice}']['path']
+        except KeyError:
+            print(colorText('[[red]][!] Incorrect syntax !\n'))
+            time.sleep(1)
+            replit.clear()
+            configmodify(data)
+
+    replit.clear()
+    hub()
 
 
 def menu(number, data):
@@ -197,12 +221,12 @@ def menu(number, data):
             Online = 'Offline'
         if Online == "Online":
             print(
-                colorText('[[' + defaultcolor + ']][' + str(i+1) + '] Fast connect to ' + data[f'{l}']['ip'] + ' [[green]](Online : ' + pingcolor(round(response_list.rtt_avg_ms)) + '[[green]])[[' + defaultcolor + ']]'))
+                colorText('[[' + defaultcolor + ']][' + str(i+1) + '] Fast connect to ' + data[f'{l}']['username'] + '@' + data[f'{l}']['ip'] + ' [[green]](Online : ' + pingcolor(round(response_list.rtt_avg_ms)) + '[[green]])[[' + defaultcolor + ']]'))
         else:
             print(
-                colorText('[[' + defaultcolor + ']][' + str(i+1) + '] Fast connect to ' + data[f'{l}']['ip'] + ' [[red]](Offline)' + '[[' + defaultcolor + ']]'))
+                colorText('[[' + defaultcolor + ']][' + str(i+1) + '] Fast connect to ' + data[f'{l}']['username'] + '@' + data[f'{l}']['ip'] + ' [[red]](Offline)' + '[[' + defaultcolor + ']]'))
 
-    print(colorText('[[blue]]\n\n\n[99] Edit configurations'))
+    print(colorText('[[magenta]]\n\n\n[99] Edit configurations'))
     choice = input(colorText('[[' + defaultcolor + ']]' + '\n[?] Choice : '))
     try:
         choice = int(choice)
