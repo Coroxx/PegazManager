@@ -113,6 +113,11 @@ def hub():
     else:
         print(colorText('[[' + defaultcolor + ']][+] ' +
               str(len(info)) + ' configurations detected !'))
+        if os.geteuid() == 0:
+            pass
+        else:
+            print(colorText(
+                '[[red]][-] You didn\'t launch this script with root privileges , some features like ping are not avalaibles (sudo python3 main.py)'))
     menu(len(info), info)
 
 
@@ -182,7 +187,8 @@ def menu(number, data):
     for i in range(number):
         l = i + 1
         try:
-            response_list = ping(data[f'{l}']['ip'], size=40, count=5)
+            response_list = ping(
+                data[f'{l}']['ip'], size=40, count=5)
             Online = 'Online'
         except:
             Online = 'Offline'
