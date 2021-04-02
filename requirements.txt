@@ -1,1 +1,2 @@
-from pythonping import ping
+pythonping
+replit

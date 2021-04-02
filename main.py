@@ -42,8 +42,9 @@ defaultcolor = random.choice(COLORLIST)
 
 try:
     from pythonping import ping
-except:
-    os.system("clear")
+    import replit
+except ModuleNotFoundError:
+    replit.clear()
     print(
         colorText(
             "[[red]]You didn't do the installation correctly, let me do it for you..."
@@ -53,11 +54,11 @@ except:
 
     try:
         os.system("pip install -r requirements.txt")
-        os.system("clear")
+        replit.clear()
         print(colorText("[[green]]Succes !"))
         time.sleep(2)
     except:
-        os.system("clear")
+        replit.clear()
         time.sleep(1)
         print(
             colorText(
@@ -76,16 +77,16 @@ def pingcolor(text):
         return colorText('[[red]]{} ms').format(text)
 
 
-def exit():
+def close():
     print(colorText('[[red]]\n[-] Exiting...'))
     time.sleep(1)
-    os.system('clear')
+    replit.clear()
     sys.exit()
 
 
 def hub():
     global info
-    os.system('clear')
+    replit.clear()
     print(colorText('[[' + defaultcolor + ']]________                          \n___  __ \___________ ______ ______\n__  /_/ /  _ \_  __ `/  __ `/__  /\n_  ____//  __/  /_/ // /_/ /__  /_\n/_/     \___/_\__, / \__,_/ _____/\n             /____/               \n\nAuthor : @Coroxx on GitHub\nVersion : 1.0\n'))
     try:
         with open('config.json', 'r') as info:
@@ -95,28 +96,46 @@ def hub():
         regenerate = input(colorText(
             '[[red]]\n[!] The config.json file seems to have been deleted, do you want to regenerate it? (y/n) '))
         if bool(re.match(r"OUI|oui|y(?:es)?|Y", regenerate)):
-            os.system('touch config.json')
             with open('config.json', 'w') as generate:
                 t = {
                 }
                 json.dump(t, generate)
             hub()
         else:
-            exit()
+            close()
     if len(info) == 0:
         create = input(colorText('[[' + defaultcolor + ']]' +
                                  '[?] No SSH configuration is detected, do you want to configure a new one? y/n : '))
         if bool(re.match(r"OUI|oui|y(?:es)?|Y", create)):
             newconfig()
         else:
-            exit()
+            close()
     else:
         print(colorText('[[' + defaultcolor + ']][+] ' +
               str(len(info)) + ' configurations detected !'))
     menu(len(info), info)
 
 
-def config():
+def configmenu():
+    replit.clear()
+    print(colorText('[[' + defaultcolor + ']]________                          \n___  __ \___________ ______ ______\n__  /_/ /  _ \_  __ `/  __ `/__  /\n_  ____//  __/  /_/ // /_/ /__  /_\n/_/     \___/_\__, / \__,_/ _____/\n             /____/               \n\nAuthor : @Coroxx on GitHub\nVersion : 1.0\n'))
+    choice = input(colorText(
+        '[[' + defaultcolor + ']]\n[1] Add a new configuration[2] Modify a configuration[3] Delete a configuration\n[0] Back :'))
+    if choice == '0':
+        menu(len(info), info)
+    elif choice == '1':
+        newconfig()
+    elif choice == '2':
+        configmodify()
+    elif choice == '3':
+        configdelete
+
+
+def configdelete():
+    pass
+
+
+def configmodify():
     pass
 
 
@@ -136,23 +155,24 @@ def menu(number, data):
             print(
                 colorText('[[' + defaultcolor + ']][' + str(i+1) + '] Fast connect to ' + data[f'{l}']['ip'] + ' [[red]](Offline)' + '[[' + defaultcolor + ']]'))
 
-    print(colorText('[[' + defaultcolor + ']]\n[99] Edit configurations'))
+    print(colorText('\n\n\n[99] Edit configurations'))
     choice = input(colorText('[[' + defaultcolor + ']]' + '\n[?] Choice : '))
     try:
         choice = int(choice)
     except ValueError:
         print(colorText('[[red]]\n[!] Invalid choice !'))
+        replit.clear()
         menu(len(info), info)
     if choice == 99:
-        config()
+        configmenu()
     elif choice > number:
         print(colorText('[[red]]\n[!] Invalid choice !'))
         menu(len(info), info)
     elif choice < number:
-        os.system('clear')
+        replit.clear()
         print(colorText('[[green]][+] Currently connecting to your server...'))
         time.sleep(2)
-        os.system('clear')
+        replit.clear()
         os.system(
             'ssh -i ' + data[f'{choice}']['path'] + ' ' + data[f'{choice}']['username'] + "@" + data[f'{choice}']['ip'])
 
@@ -183,7 +203,7 @@ def newconfig():
             newconfig()
         pass
     keyquestion = input(colorText('[[' + defaultcolor + ']]' +
-                                  '\n----------------------------\nFirst of all, do you have a ssh key ? Y/N : '))
+                                  '\n---------------------------------------------\nFirst of all, do you have a ssh key ? Y/N : '))
     if bool(re.match(r"OUI|oui|y(?:es)?|Y", keyquestion)):
         key = True
     else:
@@ -259,7 +279,7 @@ def newconfig():
         with open("config.json", 'w') as f:
             f.write(json.dumps(data,
                     indent=4, separators=(',', ': ')))
-    sys.exit()
+    hub()
 
 
 if __name__ == "__main__":
