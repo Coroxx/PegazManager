@@ -150,7 +150,7 @@ def menu(number, data):
         menu(len(info), info)
     elif choice < number:
         os.system('clear')
-        print(colorText('[[green][+] Currently connecting to your server...'))
+        print(colorText('[[green]][+] Currently connecting to your server...'))
         time.sleep(2)
         os.system('clear')
         os.system(
