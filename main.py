@@ -40,6 +40,31 @@ def colorText(text):
 
 defaultcolor = random.choice(COLORLIST)
 
+try:
+    from pythonping import ping
+except:
+    os.system("clear")
+    print(
+        colorText(
+            "[[red]]You didn't do the installation correctly, let me do it for you..."
+        )
+    )
+    time.sleep(2)
+
+    try:
+        os.system("pip install -r requirements.txt")
+        os.system("clear")
+        print(colorText("[[green]]Succes !"))
+        time.sleep(2)
+    except:
+        os.system("clear")
+        time.sleep(1)
+        print(
+            colorText(
+                "[[red]]Uh, an error has occurred, please report the problem on github."
+            )
+        )
+
 
 def pingcolor(text):
     ping = int(text)
@@ -96,7 +121,7 @@ def menu(number, data):
     for i in range(number):
         l = i + 1
         print(
-            colorText('[[' + defaultcolor + ']][' + str(i+1) + '] ' + data[f'{l}']['ip']))
+            colorText('[[' + defaultcolor + ']][' + str(i+1) + '] Fast connect to ' + data[f'{l}']['ip']))
 
 
 def isvalidpath(path):
