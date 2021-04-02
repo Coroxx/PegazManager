@@ -163,12 +163,13 @@ def menu(number, data):
         print(colorText('[[red]]\n[!] Invalid choice !'))
         replit.clear()
         menu(len(info), info)
+    print(number)
     if choice == 99:
         configmenu()
     elif choice > number:
         print(colorText('[[red]]\n[!] Invalid choice !'))
         menu(len(info), info)
-    elif choice < number:
+    elif choice <= number:
         replit.clear()
         print(colorText('[[green]][+] Currently connecting to your server...'))
         time.sleep(2)
