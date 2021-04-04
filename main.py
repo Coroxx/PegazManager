@@ -212,6 +212,17 @@ def configmodify(data):
                 colorText('[[red]][!] Invalid path !'))
             time.sleep(1)
             configmodify(data)
+    elif choice == 4:
+        try:
+            passw = data[f'{configchoice}']['password']
+            passw = input(
+                colorText('[[' + defaultcolor + ']]\nNew password : '))
+            data[f'{configchoice}']['password'] = passw
+        except KeyError:
+            print(
+                colorText('[[red]]\n[!] This configuration has not registred password '))
+            time.sleep(2)
+            hub()
 
     replit.clear()
     hub()
