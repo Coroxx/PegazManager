@@ -28,7 +28,7 @@ COLORS = {
     "black-background": "\u001b[40m",
     "cyan-background": "\u001b[46;1m",
 }
-COLORLIST = ['red', 'green', 'lightgreen', 'lightyellow', 'yellow', 'yellow', 'blue', 'magenta', 'cyan',
+COLORLIST = ['red', 'green', 'lightgreen', 'lightyellow', 'yellow', 'blue', 'cyan',
              'white']
 
 
@@ -133,11 +133,35 @@ def configmenu(data):
     elif choice == '2':
         configmodify(data)
     elif choice == '3':
-        configdelete
+        configdelete(data)
+    else:
+        print(colorText('[[red]]\n[!] Incorrect choice !'))
+        time.sleep(1)
+        configmenu(data)
 
 
-def configdelete():
-    pass
+def configdelete(data):
+    replit.clear()
+    print(
+        colorText('[[' + defaultcolor + ']]Which configuration ?\n'))
+    for i in range(len(info)):
+        l = i + 1
+        print(
+            colorText('[[' + defaultcolor + ']][' + str(i+1) + '] Configuration : ' + data[f'{l}']['username'] + '@' + data[f'{l}']['ip']))
+    choice = input(colorText('[[' + defaultcolor + ']]\n\n[?] Choice : '))
+    try:
+        choice = int(choice)
+    except ValueError:
+        print(colorText('[[red]]\n[!] Incorrect choice !'))
+        time.sleep(1)
+        configmodify(data)
+    if choice > len(info):
+        print(colorText('[[red]]\n[!] Incorrect choice !'))
+        time.sleep(1)
+        configdelete(data)
+    with open('config.json', 'w') as f:
+        del data[f'{choice}']
+        json.dump(data, f, indent=4)
 
 
 def configmodify(data):
@@ -163,7 +187,7 @@ def configmodify(data):
         replit.clear()
 
     choice = input(colorText(
-        '\n[[' + defaultcolor + ']][1] Modify IP\n[2] Change username \n[3] Change key path (if exists) \n[4] Change password (if defined) \n[5] Change port\n\n[0] Back\n\n[?] Choice : '))
+        '[[' + defaultcolor + ']][1] Modify IP\n[2] Change username \n[3] Change key path (if exists) \n[4] Change password (if defined) \n[5] Change port\n\n[0] Back\n\n[?] Choice : '))
     try:
         choice = int(choice)
         with open('config.json', 'r') as f:
@@ -207,6 +231,7 @@ def configmodify(data):
             hub()
         if (isvalidpath(pathh)):
             data[f'{configchoice}']['path'] = pathh
+            json.dump(data, f, indent=4)
         else:
             print(
                 colorText('[[red]][!] Invalid path !'))
@@ -218,11 +243,22 @@ def configmodify(data):
             passw = input(
                 colorText('[[' + defaultcolor + ']]\nNew password : '))
             data[f'{configchoice}']['password'] = passw
+            json.dump(data, f, indent=4)
         except KeyError:
             print(
                 colorText('[[red]]\n[!] This configuration has not registred password '))
             time.sleep(2)
             hub()
+    elif choice == 5:
+        newport = input(colorText('[[' + defaultcolor + ']]\nNew port : '))
+        try:
+            newport = int(newport)
+        except ValueError:
+            print(colorText('\n[[red]][!] Invalid port !'))
+            time.sleep(1)
+            configmodify(data)
+        data[f'{configchoice}']['port'] = newport
+        json.dump(data, f, indent=4)
 
     replit.clear()
     hub()
