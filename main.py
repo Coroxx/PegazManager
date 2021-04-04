@@ -198,11 +198,19 @@ def configmodify(data):
             json.dump(data, f, indent=4)
     elif choice == 3:
         try:
-            data[f'{configchoice}']['path']
+            pathh = data[f'{configchoice}']['path']
+            pathh = input(colorText('[[' + defaultcolor + ']]\nNew path : '))
         except KeyError:
-            print(colorText('[[red]][!] Incorrect syntax !\n'))
+            print(
+                colorText('[[red]]\n[!] This configuration has no registered path '))
+            time.sleep(2)
+            hub()
+        if (isvalidpath(pathh)):
+            data[f'{configchoice}']['path'] = pathh
+        else:
+            print(
+                colorText('[[red]][!] Invalid path !'))
             time.sleep(1)
-            replit.clear()
             configmodify(data)
 
     replit.clear()
