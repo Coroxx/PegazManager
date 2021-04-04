@@ -162,6 +162,7 @@ def configdelete(data):
     with open('config.json', 'w') as f:
         del data[f'{choice}']
         json.dump(data, f, indent=4)
+    hub()
 
 
 def configmodify(data):
