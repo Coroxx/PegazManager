@@ -2,20 +2,29 @@ import json
 
 
 with open('test.json', 'r') as f:
-    info = json.load(f)
+    info = json.loads(f.read())
     f.close()
 
 print(info)
 
+data = list(info.items())
+
+
 num = 1
 
-print(info)
-for element in info:
-    dd = list(element[1])
+l = []
+
+for element in list(info.items()):
+    data[num] = {
+        "type": "key",
+        "ip": element[1]['ip'],
+        "port": element[1]['port'],
+        "username": element[1]['username'],
+        "path": element[1]['path'],
+
+    }
     num += 1
 
-
-print(dd)
-
-# with open('test.json', 'w') as f:
-#     json.dump(info, f, indent=4)
+    with open('test.json', 'w') as f:
+        f.write(json.dumps(data,
+                           indent=4, separators=(',', ': ')))
