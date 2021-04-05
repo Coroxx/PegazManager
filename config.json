@@ -1,1 +1,16 @@
-{}
+{
+    "2": {
+        "type": "key",
+        "ip": "35.205.75.21",
+        "port": "22",
+        "username": "project",
+        "path": "/Users/elliot/project"
+    },
+    "1": {
+        "type": "key",
+        "ip": "35.205.75.21",
+        "port": "22",
+        "username": "project",
+        "path": "/Users/elliot/project"
+    }
+}
