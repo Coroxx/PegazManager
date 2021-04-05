@@ -111,6 +111,10 @@ def hub():
         else:
             close()
     else:
+        for infos in info.items():
+            good = checkconfig(infos[1])
+            if not good:
+                brokenconfig(infos[0], infos[1], info)
         print(colorText('[[' + defaultcolor + ']][+] ' +
               str(len(info)) + ' configurations detected !'))
         if os.geteuid() == 0:
@@ -119,6 +123,68 @@ def hub():
             print(colorText(
                 '[[red]][-] You didn\'t launch this script with root privileges , some features like ping are not avalaibles (sudo python3 main.py)'))
     menu(len(info), info)
+
+
+def checkconfig(config):
+    l = ['password', 'path', 'ip', 'username', 'port']
+    result = []
+    for element in l:
+        try:
+            config[f'{element}']
+            element = True
+            result.append(element)
+        except KeyError:
+            element = False
+            result.append(element)
+
+    if not result[0] and not result[1]:
+        return False
+    elif not result[2] or not result[3] or not result[4]:
+        return False
+    return True
+
+
+def brokenconfig(num, data, globaldata):
+    replit.clear()
+    print(colorText('[[' + defaultcolor + ']]________                          \n___  __ \___________ ______ ______\n__  /_/ /  _ \_  __ `/  __ `/__  /\n_  ____//  __/  /_/ // /_/ /__  /_\n/_/     \___/_\__, / \__,_/ _____/\n             /____/               \n\nAuthor : @Coroxx on GitHub\nVersion : 1.0\n'))
+    try:
+        ip = data['ip']
+    except KeyError:
+        ip = 'MISSING'
+    print(colorText(
+        '[[' + 'red' + ']]\n[!] Uhh, a configuration seems broken, n°' + num + '\nIP : ' + ip))
+    choice = input(colorText(
+        '[[' + defaultcolor + ']]\n[1] Reconfigure it\n[2] Delete it\n\n[3] Exit\n\n[?] Choice : '))
+    try:
+        choice = int(choice)
+    except ValueError:
+        print(colorText('[[red]]\n[!] Invalid choice !'))
+        time.sleep(1)
+        brokenconfig(num, data, globaldata)
+    if choice >= 4:
+        print(colorText('[[red]]\n[!] Invalid choice !'))
+        time.sleep(1)
+        brokenconfig(num, data, globaldata)
+    elif choice == 1:
+        del globaldata[f'{num}']
+        with open('config.json', 'w') as f:
+            json.dump(globaldata, f, indent=4)
+        newconfig()
+        hub()
+    elif choice == 2:
+        del globaldata[f'{num}']
+        num = 1
+        for element in data:
+            element = num
+            num += 1
+        with open('config.json', 'w') as f:
+            json.dump(globaldata, f, indent=4)
+    elif choice == 3:
+        close()
+    else:
+        print(colorText('[[red]]\n[!] Invalid choice !'))
+        time.sleep(1)
+        brokenconfig(num, data, globaldata)
 
 
 def configmenu(data):
@@ -304,8 +370,17 @@ def menu(number, data):
         print(colorText('[[green]][+] Currently connecting to your server...'))
         time.sleep(2)
         replit.clear()
-        os.system(
-            'ssh -i ' + data[f'{choice}']['path'] + ' ' + data[f'{choice}']['username'] + "@" + data[f'{choice}']['ip'])
+        try:
+            data[f'{choice}']['path']
+            key = True
+        except KeyError:
+            key = False
+        if key:
+            os.system(
+                'ssh -i ' + data[f'{choice}']['path'] + ' ' + data[f'{choice}']['username'] + "@" + data[f'{choice}']['ip'])
+        else:
+            os.system('sshpass -p ' + data[f'{choice}']['password'] + ' ssh' +
+                      data[f'{choice}']['username'] + "@" + data[f'{choice}']['ip'])
 
 
 def isvalidpath(path):
