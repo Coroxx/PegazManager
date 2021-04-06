@@ -11,3 +11,7 @@
 It's easy to add your own config
 
 <img src="https://i.ibb.co/2kY9ZTW/image.png" width="400">
+
+## Automatically detects broken configurations
+
+<img src="https://i.ibb.co/LRkrKjF/image.png" width="400">
