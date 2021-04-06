@@ -212,7 +212,7 @@ def configmenu(data):
     choice = input(colorText(
         '[[' + defaultcolor + ']]\n[1] Add a new configuration\n[2] Modify a configuration\n[3] Delete a configuration\n\n[0] Back\n\n[?] Choice : '))
     if choice == '0':
-        menu(len(info), info)
+        hub()
     elif choice == '1':
         newconfig()
     elif choice == '2':
