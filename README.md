@@ -9,4 +9,5 @@
 ## SSH Key Support & Password ! 
 
 It's easy to add your own config
-![alt text](https://i.ibb.co/2kY9ZTW/image.png)
+
+![](https://i.ibb.co/2kY9ZTW/image.png | width=100)
