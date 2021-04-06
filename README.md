@@ -41,5 +41,5 @@ apt-get install sshpass
 
 *Mac OS*
 ```
-brew install brew install hudochenkov/sshpass/sshpass
+brew install hudochenkov/sshpass/sshpass
 ``` 
