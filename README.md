@@ -14,4 +14,4 @@ It's easy to add your own config
 
 ## Automatically detects broken configurations
 
-<img src="https://i.ibb.co/LRkrKjF/image.png" width="400">
+<img src="https://i.ibb.co/LRkrKjF/image.png" width="800">
