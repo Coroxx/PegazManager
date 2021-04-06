@@ -10,7 +10,7 @@
 
 It's easy to add your own config
 
-<img src="https://i.ibb.co/2kY9ZTW/image.png" width="400">
+<img src="https://i.ibb.co/yfj122G/image.png" width="400">
 
 ## Automatically detects broken configurations
 
