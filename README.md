@@ -11,3 +11,4 @@
 It's easy to add your own config
 
 ![](https://i.ibb.co/2kY9ZTW/image.png | width=100)
+<img src=https://i.ibb.co/2kY9ZTW/image.png" data-canonical-src="https://i.ibb.co/2kY9ZTW/image.png" width="200" />
