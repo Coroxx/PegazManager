@@ -147,12 +147,21 @@ def checkconfig(config):
 def brokenconfig(num, data, globaldata):
     replit.clear()
     print(colorText('[[' + defaultcolor + ']]________                          \n___  __ \___________ ______ ______\n__  /_/ /  _ \_  __ `/  __ `/__  /\n_  ____//  __/  /_/ // /_/ /__  /_\n/_/     \___/_\__, / \__,_/ _____/\n             /____/               \n\nAuthor : @Coroxx on GitHub\nVersion : 1.0\n'))
+    num = 1
     try:
         ip = data['ip']
     except KeyError:
         ip = 'MISSING'
+    try:
+        typeconfig = data['type']
+    except KeyError:
+        typeconfig = 'MISSING'
+    try:
+        username = data['username']
+    except KeyError:
+        username = 'username'
     print(colorText(
-        '[[' + 'red' + ']]\n[!] Uhh, a configuration seems broken, n°' + num + '\nIP : ' + ip))
+        '[[' + 'red' + ']]\n[!] Uhh, a configuration seems broken' + '\n\nType : ' + typeconfig + '\nIP : ' + ip + '\nUsername : ' + username))
     choice = input(colorText(
         '[[' + defaultcolor + ']]\n[1] Reconfigure it\n[2] Delete it\n\n[3] Exit\n\n[?] Choice : '))
     try:
@@ -166,19 +175,39 @@ def brokenconfig(num, data, globaldata):
         time.sleep(1)
         brokenconfig(num, data, globaldata)
     elif choice == 1:
-        del globaldata[f'{num}']
+        for element in list(globaldata.items()):
+            del data[f'{element[0]}']
+        data[num] = {
+            "type": "key",
+            "ip": element[1]['ip'],
+            "port": element[1]['port'],
+            "username": element[1]['username'],
+            "path": element[1]['path'],
+
+        }
+        num += 1
+
         with open('config.json', 'w') as f:
-            json.dump(globaldata, f, indent=4)
+            f.write(json.dumps(data,
+                               indent=4, separators=(',', ': ')))
         newconfig()
         hub()
     elif choice == 2:
-        del globaldata[f'{num}']
-        num = 1
-        for element in data:
-            element = num
-            num += 1
+        for element in list(data.items()):
+            del data[f'{element[0]}']
+        data[num] = {
+            "type": "key",
+            "ip": element[1]['ip'],
+            "port": element[1]['port'],
+            "username": element[1]['username'],
+            "path": element[1]['path'],
+
+        }
+        num += 1
+
         with open('config.json', 'w') as f:
-            json.dump(globaldata, f, indent=4)
+            f.write(json.dumps(data,
+                               indent=4, separators=(',', ': ')))
     elif choice == 3:
         close()
     else:
@@ -225,9 +254,22 @@ def configdelete(data):
         print(colorText('[[red]]\n[!] Incorrect choice !'))
         time.sleep(1)
         configdelete(data)
+    num = 1
+    for element in list(data.items()):
+        del data[f'{element[0]}']
+    data[num] = {
+        "type": "key",
+        "ip": element[1]['ip'],
+        "port": element[1]['port'],
+        "username": element[1]['username'],
+        "path": element[1]['path'],
+
+    }
+    num += 1
+
     with open('config.json', 'w') as f:
-        del data[f'{choice}']
-        json.dump(data, f, indent=4)
+        f.write(json.dumps(data,
+                           indent=4, separators=(',', ': ')))
     hub()
 
 

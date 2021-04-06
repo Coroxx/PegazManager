@@ -4,6 +4,20 @@
         "ip": "35.205.75.21",
         "port": "22",
         "username": "project",
+        "pathh": "/Users/elliot/project"
+    },
+    "2": {
+        "type": "key",
+        "ip": "355.205.75.21",
+        "port": "22",
+        "username": "project",
         "pathh": "project"
+    },
+    "3": {
+        "type": "key",
+        "ip": "35.205.75.21",
+        "port": "22",
+        "username": "project",
+        "path": "/Users/elliot/project"
     }
 }

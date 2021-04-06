@@ -2,19 +2,17 @@ import json
 
 
 with open('test.json', 'r') as f:
-    info = json.loads(f.read())
-    f.close()
-
-print(info)
-
-data = list(info.items())
+    data = json.load(f)
+    f.close
 
 
+print(data)
 num = 1
 
 l = []
 
-for element in list(info.items()):
+for element in list(data.items()):
+    del data[f'{element[0]}']
     data[num] = {
         "type": "key",
         "ip": element[1]['ip'],
