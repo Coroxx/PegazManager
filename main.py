@@ -175,21 +175,11 @@ def brokenconfig(num, data, globaldata):
         time.sleep(1)
         brokenconfig(num, data, globaldata)
     elif choice == 1:
-        for element in list(globaldata.items()):
-            del data[f'{element[0]}']
-        data[num] = {
-            "type": "key",
-            "ip": element[1]['ip'],
-            "port": element[1]['port'],
-            "username": element[1]['username'],
-            "path": element[1]['path'],
-
-        }
-        num += 1
-
+        del globaldata[f'{num}']
         with open('config.json', 'w') as f:
-            f.write(json.dumps(data,
+            f.write(json.dumps(globaldata,
                                indent=4, separators=(',', ': ')))
+        reindent()
         newconfig()
         hub()
     elif choice == 2:
@@ -254,23 +244,42 @@ def configdelete(data):
         print(colorText('[[red]]\n[!] Incorrect choice !'))
         time.sleep(1)
         configdelete(data)
-    num = 1
-    for element in list(data.items()):
-        del data[f'{element[0]}']
-    data[num] = {
-        "type": "key",
-        "ip": element[1]['ip'],
-        "port": element[1]['port'],
-        "username": element[1]['username'],
-        "path": element[1]['path'],
-
-    }
-    num += 1
-
+    del data[f'{choice}']
     with open('config.json', 'w') as f:
         f.write(json.dumps(data,
                            indent=4, separators=(',', ': ')))
+        f.close()
+    reindent()
     hub()
+
+
+def reindent():
+    num = 1
+    with open('config.json', 'r') as f:
+        data = json.load(f)
+        f.close()
+
+    for element in list(data.items()):
+        l = ['type', 'ip', 'port', 'username', 'path']
+        for option in l:
+            try:
+                data[f'{element[0]}'][f'{option}']
+            except KeyError:
+                data[f'{element[0]}'][f'{option}'] = 'MISSING'
+        del data[f'{element[0]}']
+        data[num] = {
+            "type": element[1]['type'],
+            "ip": element[1]['ip'],
+            "port": element[1]['port'],
+            "username": element[1]['username'],
+            "path": element[1]['path'],
+
+        }
+        num += 1
+
+        with open('config.json', 'w') as f:
+            f.write(json.dumps(data,
+                               indent=4, separators=(',', ': ')))
 
 
 def configmodify(data):
