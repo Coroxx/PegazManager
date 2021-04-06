@@ -30,7 +30,7 @@ Mac OS :
 python -m pip install -r requirements.txt
 ```
 
-Warning ⚠️
+## Warning ⚠️
 
 SSHPASS must be installed ! 
 
