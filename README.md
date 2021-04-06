@@ -18,7 +18,7 @@ It's easy to add your own config
 
 
 
-***Install*** 🧭
+## Install 🧭
 ```
 git clone https://github.com/Coroxx/PegazManager/
 cd PegazManager
@@ -34,15 +34,12 @@ Warning ⚠️
 
 SSHPASS must be installed ! 
 
------------------
-Ubuntu / debian |
------------------
+*Ubuntu / debian*
 ```
 apt-get install sshpass
 ``` 
--------
-Mac OS|
--------
+
+*Mac OS*
 ```
 brew install brew install hudochenkov/sshpass/sshpass
 ``` 
